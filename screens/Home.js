@@ -2,14 +2,14 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const Home = () => {
+const Home = ({ route }) => {
+  const isOfflineMode = route.params?.isOfflineMode || false;
   const navigation = useNavigation();
 
   const navigateToCrearFicha = () => {
     navigation.navigate('Drawer', { screen: 'Crear ficha' });
   };
   
-
   return (
     <View style={styles.container}>
         <TouchableOpacity onPress={navigateToCrearFicha} style={styles.button}>
