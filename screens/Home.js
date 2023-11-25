@@ -1,6 +1,14 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableHighlight, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { TouchableRipple } from 'react-native-paper';
+
+
+// Importa tus imágenes
+const analisisDatos = require('../assets/icons/analisis_datos.png');
+const buscarFicha = require('../assets/icons/buscar_ficha.png');
+const crearFicha = require('../assets/icons/crear_ficha.png');
+const exportarDatos = require('../assets/icons/exportar_datos.png');
 
 const Home = ({ route }) => {
   const isOfflineMode = route.params?.isOfflineMode || false;
@@ -9,21 +17,60 @@ const Home = ({ route }) => {
   const navigateToCrearFicha = () => {
     navigation.navigate('Drawer', { screen: 'Crear ficha' });
   };
-  
+  const navigateToSearchFicha = () => {
+    navigation.navigate('Drawer', { screen: 'Registros' });
+  };
+  const navigateToAnalisisFicha = () => {
+    navigation.navigate('Drawer', { screen: 'Análisis' });
+  };
+  const navigateToExportarFicha = () => {
+    navigation.navigate('Drawer', { screen: 'Exportar' });
+  };
   return (
     <View style={styles.container}>
-        <TouchableOpacity onPress={navigateToCrearFicha} style={styles.button}>
-            <Text style={styles.buttonText}>Crear Fichas</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Buscar Ficha</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Análisis de Datos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Exportar Datos</Text>
-        </TouchableOpacity>
+      <TouchableRipple
+          onPress={navigateToCrearFicha}
+          rippleColor="#85F4FF"
+          style={styles.button}
+      >
+          <>
+              <Text style={styles.buttonText}>Crear Fichas</Text>
+              <Image source={crearFicha} style={styles.icon} />
+          </>
+      </TouchableRipple>
+  
+      <TouchableRipple
+          onPress={navigateToSearchFicha}
+          rippleColor="#85F4FF"
+          style={styles.button}
+      >
+          <>
+              <Text style={styles.buttonText}>Buscar Ficha</Text>
+              <Image source={buscarFicha} style={styles.icon} />
+          </>
+      </TouchableRipple>
+  
+      <TouchableRipple
+          onPress={navigateToAnalisisFicha}
+          rippleColor="#85F4FF"
+          style={styles.button}
+      >
+          <>
+              <Text style={styles.buttonText}>Análisis de Datos</Text>
+              <Image source={analisisDatos} style={styles.icon} />
+          </>
+      </TouchableRipple>
+  
+      <TouchableRipple
+          onPress={navigateToExportarFicha}
+          rippleColor="#85F4FF"
+          style={styles.button}
+      >
+          <>
+              <Text style={styles.buttonText}>Exportar Datos</Text>
+              <Image source={exportarDatos} style={styles.icon} />
+          </>
+      </TouchableRipple>
     </View>
   );
 };
@@ -33,17 +80,19 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#f0f8ff', // Cambiar a un tono de azul claro (Light Blue)
+    backgroundColor: '#EFFFFD', // Cambiar a un tono de azul claro (Light Blue)
   },
   button: {
-    width: 200, // Ancho fijo
-    height: 50, // Altura fija
-    marginBottom: 20,
+    width: 250, // Ancho fijo
+    height: 70, // Altura fija
+    marginBottom: 30,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 10, // Bordes redondeados
-    backgroundColor: 'skyblue',
-    justifyContent: 'center', // Centrar el texto verticalmente
+    backgroundColor: '#42C2FF',
+    flexDirection: 'row', // Alinear elementos horizontalmente
+    justifyContent: 'space-between', // Distribuir elementos uniformemente
+    alignItems: 'center', // Centrar elementos verticalmente
     shadowColor: "#000", // Sombra
     shadowOffset: {
       width: 0,
@@ -55,8 +104,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
+    fontSize: 17,
+  },
+  icon: {
+    width: 40, // Ancho de la imagen
+    height: 40, // Altura de la imagen
   },
 });
 

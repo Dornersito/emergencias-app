@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Registros() {
+export default function CrearFichas() {
   return (
     <View style={styles.container}>
-      <Text>AKI QUE ESTEN LAS FICHAS</Text>
+      <Text>AKI HAY QUE ANALIXAR FICHAS</Text>
       <StatusBar style="auto" />
     </View>
   );
