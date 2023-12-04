@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Registros() {
   const [fichas, setFichas] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const navigation = useNavigation();
 
   useEffect(() => {
     obtenerFichas();
   }, []);
+
+  const handleSearchInputChange = (text) => {
+    setSearchText(text);
+    // No cerrar el teclado automáticamente
+  };
 
   const obtenerFichas = async () => {
     try {
@@ -23,16 +29,25 @@ export default function Registros() {
       setFichas(data);
     } catch (error) {
       console.error('Error al obtener las fichas:', error);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
   const handleFilterPress = () => {
     console.log('Filtros aplicados');
+    Keyboard.dismiss(); // Importa Keyboard desde 'react-native'
   };
+  
 
   const handleFichaPress = (item) => {
     console.log('Ficha presionada:', item);
     navigation.navigate('DetallesFicha', { ficha: item });
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    obtenerFichas();
   };
 
   const renderFichaItem = ({ item }) => {
@@ -59,6 +74,9 @@ export default function Registros() {
       <TouchableOpacity style={styles.filterButton} onPress={handleFilterPress}>
         <Icon name="filter-list" size={30} color="#333" />
       </TouchableOpacity>
+      <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
+        <Icon name="refresh" size={30} color="#333" />
+      </TouchableOpacity>
     </View>
   );
 
@@ -68,8 +86,9 @@ export default function Registros() {
       <FlatList
         data={fichas}
         keyExtractor={(item, index) => (item && item.id_fichaInterna ? item.id_fichaInterna.toString() : index.toString())}
-        renderItem={renderFichaItem}
         ListHeaderComponent={renderHeader}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
       />
     </View>
   );
@@ -98,6 +117,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   filterButton: {
+    padding: 10,
+    backgroundColor: '#ccc',
+    borderRadius: 5,
+  },
+  refreshButton: {
     padding: 10,
     backgroundColor: '#ccc',
     borderRadius: 5,

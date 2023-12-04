@@ -1,11 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+
   const handleLogin = () => {
-    // Lógica de inicio de sesión aquí
-    // Puedes navegar a la siguiente pantalla usando navigation.navigate('Home') después del inicio de sesión
+    if (email === 'admin' && password === 'admin') {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Drawer',
+            state: {
+              routes: [
+                {
+                  name: 'Home',
+                  params: {
+                    isOfflineMode: false,
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      });
+
+    }
   };
 
   const handleOfflineLogin = () => {
@@ -14,18 +38,26 @@ const LoginScreen = ({ navigation }) => {
       routes: [
         {
           name: 'Drawer',
-          params: {
-            screen: 'Home',
-            isOfflineMode: true, // Agrega esta propiedad para indicar modo sin conexión
+          state: {
+            routes: [
+              {
+                name: 'Home',
+                params: {
+                  isOfflineMode: true,
+                },
+              },
+            ],
           },
         },
       ],
     });
   };
+  
+  
 
   return (
     <ImageBackground
-      source={require('../assets/LoginScreenBG.png')} // Cambia la ruta y nombre del archivo según tus necesidades
+      source={require('../assets/LoginScreenBG.png')}
       style={styles.background}
     >
       <View style={styles.container}>
@@ -36,14 +68,19 @@ const LoginScreen = ({ navigation }) => {
             style={styles.input}
             placeholder="Correo electrónico"
             placeholderTextColor="#bdc3c7"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Contraseña"
             secureTextEntry={true}
             placeholderTextColor="#bdc3c7"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
           />
         </View>
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Iniciar Sesión</Text>
         </TouchableOpacity>

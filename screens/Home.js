@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TouchableHighlight, Text, StyleSheet, Image } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableRipple } from 'react-native-paper';
-
 
 // Importa tus imágenes
 const analisisDatos = require('../assets/icons/analisis_datos.png');
@@ -10,7 +10,8 @@ const buscarFicha = require('../assets/icons/buscar_ficha.png');
 const crearFicha = require('../assets/icons/crear_ficha.png');
 const exportarDatos = require('../assets/icons/exportar_datos.png');
 
-const Home = ({ route }) => {
+const Home = () => {
+  const route = useRoute();
   const isOfflineMode = route.params?.isOfflineMode || false;
   const navigation = useNavigation();
 
@@ -18,58 +19,65 @@ const Home = ({ route }) => {
     navigation.navigate('Drawer', { screen: 'Crear ficha' });
   };
   const navigateToSearchFicha = () => {
-    navigation.navigate('Drawer', { screen: 'Registros' });
+    if (!isOfflineMode) {
+      navigation.navigate('Drawer', { screen: 'Registros' });
+    }
   };
   const navigateToAnalisisFicha = () => {
-    navigation.navigate('Drawer', { screen: 'Análisis' });
+    if (!isOfflineMode) {
+      navigation.navigate('Drawer', { screen: 'Análisis' });
+    }
   };
   const navigateToExportarFicha = () => {
-    navigation.navigate('Drawer', { screen: 'Exportar' });
+    if (!isOfflineMode) {
+      navigation.navigate('Drawer', { screen: 'Exportar' });
+    }
   };
+
   return (
     <View style={styles.container}>
       <TouchableRipple
-          onPress={navigateToCrearFicha}
-          rippleColor="#85F4FF"
-          style={styles.button}
+        onPress={navigateToCrearFicha}
+        rippleColor="#85F4FF"
+        style={{ ...styles.button, opacity: isOfflineMode ? 1 : 1}}
       >
-          <>
-              <Text style={styles.buttonText}>Crear Fichas</Text>
-              <Image source={crearFicha} style={styles.icon} />
-          </>
+        <>
+          <Text style={styles.buttonText}>Crear Fichas</Text>
+          <Image source={crearFicha} style={styles.icon} />
+        </>
       </TouchableRipple>
-  
+
       <TouchableRipple
-          onPress={navigateToSearchFicha}
-          rippleColor="#85F4FF"
-          style={styles.button}
+        onPress={navigateToSearchFicha}
+        rippleColor="#85F4FF"
+        style={{ ...styles.button, opacity: isOfflineMode ? 0.5 : 1 }}
       >
-          <>
-              <Text style={styles.buttonText}>Buscar Ficha</Text>
-              <Image source={buscarFicha} style={styles.icon} />
-          </>
+        <>
+          <Text style={styles.buttonText}>Buscar Ficha</Text>
+          <Image source={buscarFicha} style={styles.icon} />
+        </>
       </TouchableRipple>
-  
+
       <TouchableRipple
-          onPress={navigateToAnalisisFicha}
-          rippleColor="#85F4FF"
-          style={styles.button}
+        onPress={navigateToAnalisisFicha}
+        rippleColor="#85F4FF"
+        style={{ ...styles.button, opacity: isOfflineMode ? 0.5 : 1 }}
       >
-          <>
-              <Text style={styles.buttonText}>Análisis de Datos</Text>
-              <Image source={analisisDatos} style={styles.icon} />
-          </>
+        <>
+          <Text style={styles.buttonText}>Análisis de Datos</Text>
+          <Image source={analisisDatos} style={styles.icon} />
+        </>
       </TouchableRipple>
-  
+
       <TouchableRipple
-          onPress={navigateToExportarFicha}
-          rippleColor="#85F4FF"
-          style={styles.button}
+        onPress={navigateToExportarFicha}
+        rippleColor="#85F4FF"
+        style={{ ...styles.button, opacity: isOfflineMode ? 0.5 : 1 }}
       >
-          <>
-              <Text style={styles.buttonText}>Exportar Datos</Text>
-              <Image source={exportarDatos} style={styles.icon} />
-          </>
+        <>
+          <Text style={styles.buttonText}>Exportar Datos</Text>
+          <Image source={exportarDatos} style={styles.icon} />
+        </>
       </TouchableRipple>
     </View>
   );
