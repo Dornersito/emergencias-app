@@ -22,6 +22,11 @@ export default function CrearFichas() {
   const [totalDeFallecidos, setTotalDeFallecidos] = useState('');
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
+  const [isChecked3, setIsChecked3] = useState(false);
+  const [isChecked4, setIsChecked4] = useState(false);
+  const [isChecked5, setIsChecked5] = useState(false);
+  const [isChecked6, setIsChecked6] = useState(false);
+  const [isChecked7, setIsChecked7] = useState(false);
   const [detalleEmergencia, setDetalleEmergencia] = useState('');
   const [evaluacionNecesidades, setEvaluacionNecesidades] = useState('');
   const [nombreAfectado, setNombreAfectado] = useState('');
@@ -38,6 +43,31 @@ export default function CrearFichas() {
   const handleCheckbox2 = () => {
     setIsChecked1(false);
     setIsChecked2(true);
+  };
+  const handleCheckbox3 = () => {
+    setIsChecked3(true);
+    setIsChecked4(false);
+    setIsChecked5(false);
+  };
+
+  const handleCheckbox4 = () => {
+    setIsChecked3(false);
+    setIsChecked4(true);
+    setIsChecked5(false);
+  };
+
+  const handleCheckbox5 = () => {
+    setIsChecked3(false);
+    setIsChecked4(false);
+    setIsChecked5(true);
+  };
+  const handleCheckbox6 = () => {
+    setIsChecked6(true);
+    setIsChecked7(false);
+  };
+  const handleCheckbox7 = () => {
+    setIsChecked6(false);
+    setIsChecked7(true);
   };
 
   const handleGuardar = () => {
@@ -208,20 +238,76 @@ export default function CrearFichas() {
         />
         </View>
         <Text style={styles.label}>Daños a viviendas</Text>
-
-        <View>
-          <Text style={styles.label}>Tipo de daño a la vivienda:</Text>
-          <Picker
-            selectedValue={tipoEvento}
-            style={styles.inputPick}
-            onValueChange={(itemValue) => setTipoEvento(itemValue)}>
-            <Picker.Item label="Conferencia" value="Conferencia" color="black" />
-            <Picker.Item label="Reunión" value="Reunión" />
-            <Picker.Item label="Fiesta" value="Fiesta" />
-          </Picker>
+        <Text style={styles.label}>Tipo de daño:</Text>
+        <View style={styles.checkboxContainer}>
+          <Text style={styles.label}>daño menor habitable</Text>
+          <TouchableOpacity
+            style={styles.checkbox}
+            onPress={handleCheckbox3}
+          >
+            <Icon
+              name={isChecked3 ? 'check-square' : 'square-o'}
+              size={24}
+              color={isChecked3 ? '#007bff' : '#000'}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.checkboxContainer}>
-        <Text style={styles.label}>Es seguro</Text>
+          <Text style={styles.label}>daño mayor irrecuperable</Text>
+          <TouchableOpacity
+            style={styles.checkbox}
+            onPress={handleCheckbox4}
+          >
+            <Icon
+              name={isChecked4 ? 'check-square' : 'square-o'}
+              size={24}
+              color={isChecked4 ? '#007bff' : '#000'}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.checkboxContainer}>
+          <Text style={styles.label}>Destruidas irrecuperable</Text>
+          <TouchableOpacity
+            style={styles.checkbox}
+            onPress={handleCheckbox5}
+          >
+            <Icon
+              name={isChecked5 ? 'check-square' : 'square-o'}
+              size={24}
+              color={isChecked5 ? '#007bff' : '#000'}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.label}>Propiedad:</Text>
+        <View style={styles.checkboxContainer}>
+          <Text style={styles.label}>propietario</Text>
+          <TouchableOpacity
+            style={styles.checkbox}
+            onPress={handleCheckbox6}
+          >
+            <Icon
+              name={isChecked6 ? 'check-square' : 'square-o'}
+              size={24}
+              color={isChecked6 ? '#007bff' : '#000'}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.checkboxContainer}>
+          <Text style={styles.label}>arrendada</Text>
+          <TouchableOpacity
+            style={styles.checkbox}
+            onPress={handleCheckbox7}
+          >
+            <Icon
+              name={isChecked7 ? 'check-square' : 'square-o'}
+              size={24}
+              color={isChecked7 ? '#007bff' : '#000'}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.label}>Seguridad:</Text>
+        <View style={styles.checkboxContainer}>
+          <Text style={styles.label}>Es seguro</Text>
           <TouchableOpacity
             style={styles.checkbox}
             onPress={handleCheckbox1}
