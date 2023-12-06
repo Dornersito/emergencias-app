@@ -1,25 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Button } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { StatusBar } from 'expo-status-bar';
+import { useFocusEffect } from '@react-navigation/native';
+import NumericInput from '../assets/components/NumericInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import moment from 'moment';
+import CheckBoxWithLabel from '../assets/components/CheckBoxWithLabel';
 
 export default function CrearFichas() {
+  const [titulo, setTitulo] = useState('Ficha001');
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
   const [sector, setSector] = useState('');
-  const [tipoEvento, setTipoEvento] = useState();
-  const [totalDeAfectados, setAfectados] = useState('');
-  const [totalDeNinosM, setTotalNinosM] = useState('');
-  const [totalDeNinosF, setTotalNinosF] = useState('');
-  const [totalDeAdultosM, setTotalDeAdultosM] = useState('');
-  const [totalDeAdultosF, setTotalDeAdultosF] = useState('');
-  const [totalDeAdultoMayorM, setTotalDeAdultoMayorM] = useState('');
-  const [totalDeAdultoMayorF, setTotalDeAdultoMayorF] = useState('');
-  const [totalDeDanmificados, setTotalDeDanmificados] = useState('');
-  const [totalDeAlvergados, setTotalDeAlvergados] = useState('');
-  const [totalDeDesaparecidos, setTotalDeDesaparecidos] = useState('');
-  const [totalDeFallecidos, setTotalDeFallecidos] = useState('');
+  const [tipoEvento, setTipoEvento] = useState([]);
+  const [totalDeAfectados, setAfectados] = useState(0);
+  const [totalDeNinosM, setTotalNinosM] = useState(0); 
+  const [totalDeNinosF, setTotalNinosF] = useState(0); 
+  const [totalDeAdultosM, setTotalDeAdultosM] = useState(0); 
+  const [totalDeAdultosF, setTotalDeAdultosF] = useState(0); 
+  const [totalDeAdultoMayorM, setTotalDeAdultoMayorM] = useState(0); 
+  const [totalDeAdultoMayorF, setTotalDeAdultoMayorF] = useState(0);
+  const [totalDeDanmificados, setTotalDeDanmificados] = useState(0); 
+  const [totalDeAlvergados, setTotalDeAlvergados] = useState(0); 
+  const [totalDeDesaparecidos, setTotalDeDesaparecidos] = useState(0); 
+  const [totalDeFallecidos, setTotalDeFallecidos] = useState(0); 
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [isChecked3, setIsChecked3] = useState(false);
@@ -35,6 +38,80 @@ export default function CrearFichas() {
   const [domicilio, setDomicilio] = useState('');
   const [observaciones, setObservaciones] = useState('');
   const [funcionario, setFuncionario] = useState('');
+
+
+  const resetState = () => {
+    setTitulo('Ficha001');
+    setFecha('');
+    setHora('');
+    setSector('');
+    setTipoEvento([]);
+    setAfectados(0);
+    setTotalNinosM(0);
+    setTotalNinosF(0);
+    setTotalDeAdultosM(0);
+    setTotalDeAdultosF(0);
+    setTotalDeAdultoMayorM(0);
+    setTotalDeAdultoMayorF(0);
+    setTotalDeDanmificados(0);
+    setTotalDeAlvergados(0);
+    setTotalDeDesaparecidos(0);
+    setTotalDeFallecidos(0);
+    setIsChecked1(false);
+    setIsChecked2(false);
+    setIsChecked3(false);
+    setIsChecked4(false);
+    setIsChecked5(false);
+    setIsChecked6(false);
+    setIsChecked7(false);
+    setDetalleEmergencia('');
+    setEvaluacionNecesidades('');
+    setNombreAfectado('');
+    setRut('');
+    setFono('');
+    setDomicilio('');
+    setObservaciones('');
+    setFuncionario('');
+  };
+
+  useEffect(() => {
+    const currentFecha = moment().format('DD-MM-YYYY');
+    const currentHora = moment().format('HH:mm');
+    setFecha(currentFecha);
+    setHora(currentHora);
+  }, []);
+
+  const handleTipoEventoPress = (option) => {
+    const newTipoEvento = [...tipoEvento];
+  
+    const index = newTipoEvento.indexOf(option);
+  
+    if (index !== -1) {
+      newTipoEvento.splice(index, 1);
+    } else {
+      newTipoEvento.push(option);
+    }
+  
+    setTipoEvento(newTipoEvento);
+  };
+  
+  const renderTipoEventoOptions = (options) => {
+    return options.map((option, index) => (
+      <TouchableOpacity
+        key={index}
+        style={[styles.checkbox, tipoEvento.includes(option) ? styles.checkedOption : null]}
+        onPress={() => handleTipoEventoPress(option)}
+      >
+        <Icon
+          name={tipoEvento.includes(option) ? 'check-square' : 'square-o'}
+          size={24}
+          color={tipoEvento.includes(option) ? '#007bff' : '#000'}
+        />
+        <Text style={styles.checkboxLabel}>{option}</Text>
+      </TouchableOpacity>
+    ));
+  };  
+  
   const handleCheckbox1 = () => {
     setIsChecked1(true);
     setIsChecked2(false);
@@ -70,272 +147,279 @@ export default function CrearFichas() {
     setIsChecked7(true);
   };
 
-  const handleGuardar = () => {
-    // Aquí puedes implementar la lógica para guardar la información
-    // por ejemplo, enviar la información a una API o almacenarla localmente.
-    console.log('Información guardada:', {
-      fecha,
-      hora,
-      sector,
-      tipoEvento,
-      totalDeAfectados,
-      totalDeNinosM,
-      totalDeNinosF,
-      totalDeAdultosM,
-      totalDeAdultosF,
-      totalDeAdultoMayorM,
-      totalDeAdultoMayorF,
-      totalDeDanmificados,
-      totalDeAlvergados,
-      totalDeDesaparecidos,
-      totalDeFallecidos,
-      isChecked1,
-      isChecked2,
-      detalleEmergencia,
-      evaluacionNecesidades,
-    });
-  };
+  const handleGuardar = async () => {
+    const fechaActual = moment().format('YYYY-MM-DD');
+    const horaActual = moment().format('HH:mm:ss');
+      
+    const data = {
+      ficha_interna: {
+        id_fichaInterna: Math.floor(Math.random() * 1000) + 1, // Genera un ID aleatorio
+        numero_ficha: `FI${Math.floor(Math.random() * 1000) + 1}`, // Genera un número de ficha aleatorio
+        fecha: fechaActual,
+        hora: horaActual,
+      },
+      emergencias: {
+        id_emergencia: Math.floor(Math.random() * 1000) + 1, // Genera un ID de emergencia aleatorio
+        id_ficha_interna: Math.floor(Math.random() * 1000) + 1, // Genera un ID de ficha interna aleatorio
+        sector: sector,
+        coordenadaLatitud: '', // Ajusta según lo que tengas disponible
+        coordenadaLongitud: '', // Ajusta según lo que tengas disponible
+        tipo: tipoEvento.join(','), // Convierte el array en una cadena separada por comas
+        descripcion: detalleEmergencia,
+        danos_siniestro: 'MUCHO', // Ajusta según lo que tengas disponible
+        damnificados: totalDeDanmificados,
+        total_afectados: totalDeAfectados,
+        total_femenino: totalDeNinosF + totalDeAdultosF + totalDeAdultoMayorF,
+        total_masculino: totalDeNinosM + totalDeAdultosM + totalDeAdultoMayorM,
+        cantidad_ninos: totalDeNinosM + totalDeNinosF,
+        cantidad_adulto: totalDeAdultosM + totalDeAdultosF,
+        cantidad_adultomayor: totalDeAdultoMayorM + totalDeAdultoMayorF,
+        fallecidos: totalDeFallecidos,
+        seguro: isChecked1,
+      },
+      afectado: {
+        id_afectado: Math.floor(Math.random() * 1000) + 1, // Genera un ID de afectado aleatorio
+        nombre_completo: nombreAfectado,
+        rut: rut,
+        id_emergencia: Math.floor(Math.random() * 1000) + 1, // Genera un ID de emergencia aleatorio
+        domicilio: domicilio,
+        telefono: fono,
+        sexo: 'Hombre', // Ajusta según lo que tengas disponible
+        etapavida: 'Edad Adulta', // Ajusta según lo que tengas disponible
+        tipodano: 'MUCHO', // Ajusta según lo que tengas disponible
+      },
+    };
+  
+    try {
+      const response = await fetch('http://192.168.0.2:5000/api/insertarDatos/fichas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        console.log('Información guardada exitosamente.');
+        resetState(); // Restablece los estados después de guardar
+      } else {
+        console.error('Error al intentar guardar la información.');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };  
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContainer}>
       <View style={styles.container}>
-
-        {/* Campo de fecha */}
-        <View>
-          <Text style={styles.label}>Fecha:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la fecha (DD-MM-YYYY)"
-            value={fecha}
-            onChangeText={(text) => setFecha(text)}
-          />
+        <Text style={styles.titulo}>{titulo}</Text>
+  
+        {/* Contenedor para Fecha y Hora */}
+        <View style={styles.dateTimeContainer}>
+          <View style={styles.rowContainer}>
+            <Text style={styles.label}>Fecha:</Text>
+            <Text style={styles.value}>{fecha}</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={[styles.label]}>Hora:</Text>
+            <Text style={styles.value}>{hora}</Text>
+          </View>
         </View>
-
-        {/* Campo de hora */}
-        <View>
-          <Text style={styles.label}>Hora:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la hora (HH:mm)"
-            value={hora}
-            onChangeText={(text) => setHora(text)}
-          />
-        </View>
-
+   
+        <View style={styles.separator}></View>
+  
         {/* Campo de sector */}
         <View>
-          <Text style={styles.label}>Sector:</Text>
+          <Text style={styles.subtitulo}>Sector</Text>
           <TextInput
-            style={styles.input}
+            style={styles.largeInput}
             placeholder="Ingrese el sector"
             value={sector}
-            label="escoge una opcion para el evento"
             onChangeText={(text) => setSector(text)}
           />
         </View>
 
-        {/* Campo de tipo de evento */}
-        {/* Campo de sector */}
-        <View>
-          <Text style={styles.label}>Tipo de eventor:</Text>
+        <View style={styles.separator}></View>
+
+        {/* Campo de tipo de evento en dos columnas */}
+        <Text style={styles.subtitulo}>Tipo de evento</Text>
+        <View style={styles.tipoEventoContainer}>
+          <View style={styles.column}>{renderTipoEventoOptions(["Incendio Estructural", "Incendio Forestal", "Inundación", "Caida de Árbol", "Derrumbes", "Deslizamiento", "Sismo"])}</View>
+          <View style={styles.column}>{renderTipoEventoOptions(["Emergencia Sanitaria", "Actividad Volcánica", "Accidente de Tránsito", "Derrame de Sustancias", "Emanación de Gas", "Corte de Energía Eléctrica", "Corte de Agua"])}</View>
+        </View>
+        {/* Campo "Otro" */}
+        <View style={styles.rowContainer}>
+          <Text style={styles.label}>Otro:</Text>
           <TextInput
             style={styles.input}
-            placeholder="Ingrese el tipo de evento"
-            value={tipoEvento}
-            label="escoge una opcion para el evento"
-            onChangeText={(text) => setTipoEvento(text)}
+            placeholder="Ingrese otro tipo de evento"
+            value={tipoEvento.includes("Otro") ? tipoEvento.find((t) => t === "Otro") : ""}
+            onChangeText={(text) => handleTipoEventoPress("Otro")}
           />
         </View>
-        <Text style={styles.label}>Daños a personas</Text>
-        <View>
+
+        <View style={styles.separator}></View>
+  
+        {/* Daños a persoans*/}
+
+        <Text style={styles.subtitulo}>Daños a personas</Text>
+        <View style={styles.rowContainer2}>
           <Text style={styles.label}>Total de afectados:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la cantidad de afectados"
-            value={totalDeAfectados}
-            onChangeText={(text) => setAfectados(text)}
+          <NumericInput
+            value={totalDeAfectados.toString()}
+            onIncrement={() => setAfectados((prev) => prev + 1)}
+            onDecrement={() => setAfectados((prev) => (prev > 0 ? prev - 1 : 0))}
+            onChange={(text) => setAfectados(parseInt(text, 10))}
           />
         </View>
+        <View style={styles.separator2}></View>
         <View>
-          <Text style={styles.label}>niños:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la cantidad de niños masculinos afectados"
-            value={totalDeNinosM}
-            onChangeText={(text) => setTotalNinosM(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la cantidad de niños femeninos afectados"
-            value={totalDeNinosF}
-            onChangeText={(text) => setTotalNinosF(text)}
-          />
+          <Text style={styles.label}>Niños:</Text>
+          <View style={styles.rowContainer2}>
+            <Text style={styles.label}>Masculinos:</Text>
+            <NumericInput
+              value={totalDeNinosM}
+              onIncrement={() => setTotalNinosM((prev) => parseInt(prev, 10) + 1)}
+              onDecrement={() => setTotalNinosM((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+              onChange={(text) => setTotalNinosM(text)}
+            />
+          </View>
+          <View style={styles.rowContainer2}>
+            <Text style={styles.label}>Femeninos:</Text>
+            <NumericInput
+              value={totalDeNinosF}
+              onIncrement={() => setTotalNinosF((prev) => parseInt(prev, 10) + 1)}
+              onDecrement={() => setTotalNinosF((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+              onChange={(text) => setTotalNinosF(text)}
+            />
+          </View>
         </View>
+        <View style={styles.separator2}></View>
         <View>
           <Text style={styles.label}>Adultos:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la cantidad de adultos masculinos afectados"
-            value={totalDeAdultosM}
-            onChangeText={(text) => setTotalDeAdultosM(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la cantidad de adultos femeninos afectados"
-            value={totalDeAdultosF}
-            onChangeText={(text) => setTotalDeAdultosF(text)}
-          />
+          <View style={styles.rowContainer2}>
+            <Text style={styles.label}>Masculinos:</Text>
+            <NumericInput
+              value={totalDeAdultosM}
+              onIncrement={() => setTotalDeAdultosM((prev) => parseInt(prev, 10) + 1)}
+              onDecrement={() => setTotalDeAdultosM((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+              onChange={(text) => setTotalDeAdultosM(text)}
+            />
+          </View>
+          <View style={styles.rowContainer2}>
+            <Text style={styles.label}>Femeninos:</Text>
+            <NumericInput
+              value={totalDeAdultosF}
+              onIncrement={() => setTotalDeAdultosF((prev) => parseInt(prev, 10) + 1)}
+              onDecrement={() => setTotalDeAdultosF((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+              onChange={(text) => setTotalDeAdultosF(text)}
+            />
+          </View>
         </View>
+        <View style={styles.separator2}></View>
         <View>
           <Text style={styles.label}>Adultos mayores:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la cantidad de adultos mayores masculinos afectados"
-            value={totalDeAdultoMayorM}
-            onChangeText={(text) => setTotalDeAdultoMayorM(text)}
+          <View style={styles.rowContainer2}>
+            <Text style={styles.label}>Masculinos:</Text>
+            <NumericInput
+              value={totalDeAdultoMayorM}
+              onIncrement={() => setTotalDeAdultoMayorM((prev) => parseInt(prev, 10) + 1)}
+              onDecrement={() => setTotalDeAdultoMayorM((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+              onChange={(text) => setTotalDeAdultoMayorM(text)}
+            />
+          </View>
+          <View style={styles.rowContainer2}>
+            <Text style={styles.label}>Femeninos:</Text>
+            <NumericInput
+              value={totalDeAdultoMayorF}
+              onIncrement={() => setTotalDeAdultoMayorF((prev) => parseInt(prev, 10) + 1)}
+              onDecrement={() => setTotalDeAdultoMayorF((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+              onChange={(text) => setTotalDeAdultoMayorF(text)}
+            />
+          </View>
+        </View>
+        <View style={styles.separator2}></View>
+        <View style={styles.rowContainer2}>
+          <Text style={styles.label}>Danmificados:</Text>
+          <NumericInput
+            value={totalDeDanmificados}
+            onIncrement={() => setTotalDeDanmificados((prev) => parseInt(prev, 10) + 1)}
+            onDecrement={() => setTotalDeDanmificados((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+            onChange={(text) => setTotalDeDanmificados(text)}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese la cantidad de adultos mayores femeninos afectados"
-            value={totalDeAdultoMayorF}
-            onChangeText={(text) => setTotalDeAdultoMayorF(text)}
+        </View>
+
+        <View style={styles.rowContainer2}>
+          <Text style={styles.label}>Alvergados:</Text>
+          <NumericInput
+            value={totalDeAlvergados}
+            onIncrement={() => setTotalDeAlvergados((prev) => parseInt(prev, 10) + 1)}
+            onDecrement={() => setTotalDeAlvergados((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+            onChange={(text) => setTotalDeAlvergados(text)}
           />
         </View>
-        <View>
-        <Text style={styles.label}>Danmificados:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingrese la cantidad de danmificados"
-          value={totalDeDanmificados}
-          onChangeText={(text) => setTotalDeDanmificados(text)}
-        />
+
+
+        <View style={styles.rowContainer2}>
+          <Text style={styles.label}>Desaparecidos:</Text>
+          <NumericInput
+            value={totalDeDesaparecidos}
+            onIncrement={() => setTotalDeDesaparecidos((prev) => parseInt(prev, 10) + 1)}
+            onDecrement={() => setTotalDeDesaparecidos((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+            onChange={(text) => setTotalDeDesaparecidos(text)}
+          />
         </View>
-        <View>
-        <Text style={styles.label}>Alvergados:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingrese la cantidad de alvergados"
-          value={totalDeAlvergados}
-          onChangeText={(text) => setTotalDeAlvergados(text)}
-        />
+
+        <View style={styles.rowContainer2}>
+          <Text style={styles.label}>Fallecidos:</Text>
+          <NumericInput
+            value={totalDeFallecidos}
+            onIncrement={() => setTotalDeFallecidos((prev) => parseInt(prev, 10) + 1)}
+            onDecrement={() => setTotalDeFallecidos((prev) => (parseInt(prev, 10) > 0 ? parseInt(prev, 10) - 1 : 0))}
+            onChange={(text) => setTotalDeFallecidos(text)}
+          />
         </View>
-        <View>
-        <Text style={styles.label}>Desaparecidos:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingrese la cantidad de desaparecidos"
-          value={totalDeDesaparecidos}
-          onChangeText={(text) => setTotalDeDesaparecidos(text)}
-        />
-        </View>
-        <View>
-        <Text style={styles.label}>Fallecidos:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingrese la cantidad de fallecidos"
-          value={totalDeFallecidos}
-          onChangeText={(text) => setTotalDeFallecidos(text)}
-        />
-        </View>
-        <Text style={styles.label}>Daños a viviendas</Text>
-        <Text style={styles.label}>Tipo de daño:</Text>
+
+        <View style={styles.separator}></View>
+
+        <Text style={styles.subtitulo}>Daños a viviendas</Text>
+
         <View style={styles.checkboxContainer}>
-          <Text style={styles.label}>daño menor habitable</Text>
-          <TouchableOpacity
-            style={styles.checkbox}
-            onPress={handleCheckbox3}
-          >
-            <Icon
-              name={isChecked3 ? 'check-square' : 'square-o'}
-              size={24}
-              color={isChecked3 ? '#007bff' : '#000'}
-            />
-          </TouchableOpacity>
+          <CheckBoxWithLabel label="Daño menor habitable" isChecked={isChecked3} onPress={handleCheckbox3} />
         </View>
+
         <View style={styles.checkboxContainer}>
-          <Text style={styles.label}>daño mayor irrecuperable</Text>
-          <TouchableOpacity
-            style={styles.checkbox}
-            onPress={handleCheckbox4}
-          >
-            <Icon
-              name={isChecked4 ? 'check-square' : 'square-o'}
-              size={24}
-              color={isChecked4 ? '#007bff' : '#000'}
-            />
-          </TouchableOpacity>
+          <CheckBoxWithLabel label="Daño mayor irrecuperable" isChecked={isChecked4} onPress={handleCheckbox4} />
         </View>
+
         <View style={styles.checkboxContainer}>
-          <Text style={styles.label}>Destruidas irrecuperable</Text>
-          <TouchableOpacity
-            style={styles.checkbox}
-            onPress={handleCheckbox5}
-          >
-            <Icon
-              name={isChecked5 ? 'check-square' : 'square-o'}
-              size={24}
-              color={isChecked5 ? '#007bff' : '#000'}
-            />
-          </TouchableOpacity>
+          <CheckBoxWithLabel label="Destruidas irrecuperables" isChecked={isChecked5} onPress={handleCheckbox5} />
         </View>
+
         <Text style={styles.label}>Propiedad:</Text>
+
         <View style={styles.checkboxContainer}>
-          <Text style={styles.label}>propietario</Text>
-          <TouchableOpacity
-            style={styles.checkbox}
-            onPress={handleCheckbox6}
-          >
-            <Icon
-              name={isChecked6 ? 'check-square' : 'square-o'}
-              size={24}
-              color={isChecked6 ? '#007bff' : '#000'}
-            />
-          </TouchableOpacity>
+          <CheckBoxWithLabel label="Propietario" isChecked={isChecked6} onPress={handleCheckbox6} />
         </View>
+
         <View style={styles.checkboxContainer}>
-          <Text style={styles.label}>arrendada</Text>
-          <TouchableOpacity
-            style={styles.checkbox}
-            onPress={handleCheckbox7}
-          >
-            <Icon
-              name={isChecked7 ? 'check-square' : 'square-o'}
-              size={24}
-              color={isChecked7 ? '#007bff' : '#000'}
-            />
-          </TouchableOpacity>
+          <CheckBoxWithLabel label="Arrendada" isChecked={isChecked7} onPress={handleCheckbox7} />
         </View>
+
         <Text style={styles.label}>Seguridad:</Text>
+
         <View style={styles.checkboxContainer}>
-          <Text style={styles.label}>Es seguro</Text>
-          <TouchableOpacity
-            style={styles.checkbox}
-            onPress={handleCheckbox1}
-          >
-            <Icon
-              name={isChecked1 ? 'check-square' : 'square-o'}
-              size={24}
-              color={isChecked1 ? '#007bff' : '#000'}
-            />
-            <Text style={styles.checkboxLabel}>si</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.checkbox}
-            onPress={handleCheckbox2}
-          >
-            <Icon
-              name={isChecked2 ? 'check-square' : 'square-o'}
-              size={24}
-              color={isChecked2 ? '#007bff' : '#000'}
-            />
-            <Text style={styles.checkboxLabel}>no</Text>
-          </TouchableOpacity>
+          <CheckBoxWithLabel label="Es seguro" isChecked={isChecked1} onPress={handleCheckbox1} />
+          <CheckBoxWithLabel label="No es seguro" isChecked={isChecked2} onPress={handleCheckbox2} />
         </View>
+
+        <View style={styles.separator}></View>
 
         <Text style={styles.label}>Detalle de Emergencia:</Text>
         <TextInput
           style={styles.textArea}
-          placeholder="Ingrese el detalle de emergencia"
+          placeholder="Ingrese el detalle de emergencia" 
           value={detalleEmergencia}
           onChangeText={(text) => setDetalleEmergencia(text)}
           multiline
@@ -351,12 +435,15 @@ export default function CrearFichas() {
           multiline
           numberOfLines={5}
         />
-        <Text style={styles.label}>Identificacion de los afectados</Text>
+
+        <View style={styles.separator}></View>
+
+        <Text style={styles.subtitulo}>Identificacion de los afectados</Text>
         <View>
           <Text style={styles.label}>Nombre Completo:</Text>
           <TextInput
-            style={styles.input}
-            placeholder="nombre completo del afectado"
+            style={styles.largeInput}
+            placeholder="Nombre del afectado"
             value={nombreAfectado}
             onChangeText={(text) => setNombreAfectado(text)}
           />
@@ -364,7 +451,7 @@ export default function CrearFichas() {
         <View>
           <Text style={styles.label}>RUT:</Text>
           <TextInput
-            style={styles.input}
+            style={styles.largeInput}
             placeholder="ej: 12345678-9"
             value={rut}
             onChangeText={(text) => setRut(text)}
@@ -373,7 +460,7 @@ export default function CrearFichas() {
         <View>
           <Text style={styles.label}>Fono:</Text>
           <TextInput
-            style={styles.input}
+            style={styles.largeInput}
             placeholder="Ingrese el fono de la victima"
             value={fono}
             onChangeText={(text) => setFono(text)}
@@ -382,8 +469,8 @@ export default function CrearFichas() {
         <View>
           <Text style={styles.label}>Domicilio:</Text>
           <TextInput
-            style={styles.input}
-            placeholder="domicilio del afectado"
+            style={styles.largeInput}
+            placeholder="Domicilio del afectado" 
             value={domicilio}
             onChangeText={(text) => setDomicilio(text)}
           />
@@ -391,7 +478,7 @@ export default function CrearFichas() {
         <Text style={styles.label}>Observaciones:</Text>
         <TextInput
           style={styles.textArea}
-          placeholder="observaciones de los afectados"
+          placeholder="Observaciones de los afectados"
           value={observaciones}
           onChangeText={(text) => setObservaciones(text)}
           multiline
@@ -401,8 +488,8 @@ export default function CrearFichas() {
       <View>
           <Text style={styles.label}>Funcionario de turno:</Text>
           <TextInput
-            style={styles.input}
-            placeholder="nombre del funcionario de turno para la emergencia"
+            style={styles.largeInput}
+            placeholder="Nombre del funcionario"
             value={funcionario}
             onChangeText={(text) => setFuncionario(text)}
           />
@@ -418,15 +505,90 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
+  titulo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  subtitulo:{
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: 'black',
+    marginVertical: 10,
+  },
+  separator2: {
+    height: 1,
+    backgroundColor: 'blue',
+    marginVertical: 10,
+  },
+  rowContainer2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    justifyContent: 'space-between',  // Espacio entre el texto y el cuadrado
+    width: '100%',  // Ocupa el 100% del ancho disponible
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'left',
   },
+  largeInput: {
+    height:40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 5,
+    paddingHorizontal: 10,
+    width: '90%',
+  },
+  tipoEventoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  column: {
+    flex: 1,
+  },
+  checkedOption: {
+    backgroundColor: '#e6f7ff',  // Cambia el color de fondo cuando está seleccionado
+  },
+  numericInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  numericInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 5,
+    paddingHorizontal: 10,
+    width: 50,
+  },
   label: {
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 10,
+  },
+  dateTimeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  value: {
+    marginLeft: 10,
+    marginTop:10,
+    marginRight:15,
+    fontSize: 16,
   },
   input: {
     height: 40,
@@ -444,7 +606,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: 200,
     color: 'black',
-    backgroundColor: 'white', // Set a background color
+    backgroundColor: 'white',
   },
   checkboxContainer: {
     flexDirection: 'row',

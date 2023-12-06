@@ -86,9 +86,8 @@ export default function Registros() {
       <FlatList
         data={fichas}
         keyExtractor={(item, index) => (item && item.id_fichaInterna ? item.id_fichaInterna.toString() : index.toString())}
+        renderItem={renderFichaItem}
         ListHeaderComponent={renderHeader}
-        refreshing={isRefreshing}
-        onRefresh={handleRefresh}
       />
     </View>
   );
