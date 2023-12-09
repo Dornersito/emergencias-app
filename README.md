@@ -30,3 +30,10 @@ export const API_BASE_URL = 'Escriba_su_ip';
 ```
 
 Y se podra ejecutar de manera correcta
+
+## Uso
+
+En la app se tiene que iniciar seccion con 
+
+Correo : admin
+Contraseña : admin
