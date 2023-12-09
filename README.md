@@ -1,4 +1,4 @@
-# Nombre del Proyecto
+# App Gestion de emergencias
 
 Breve descripción del proyecto y su propósito.
 
