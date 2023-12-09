@@ -7,7 +7,6 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-
   const handleLogin = () => {
     if (email === 'admin' && password === 'admin') {
       navigation.reset({
@@ -28,32 +27,33 @@ const LoginScreen = ({ navigation }) => {
           },
         ],
       });
-
+    } else {
+      // Si las credenciales son incorrectas, establecer el estado de error
+      setError('Credenciales incorrectas. Inténtalo de nuevo.');
     }
   };
 
-  const handleOfflineLogin = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'Drawer',
-          state: {
-            routes: [
-              {
-                name: 'Home',
-                params: {
-                  isOfflineMode: true,
-                },
-              },
-            ],
-          },
-        },
-      ],
-    });
-  };
-  
-  
+  // Eliminamos la función handleOfflineLogin y el botón correspondiente
+  // const handleOfflineLogin = () => {
+  //   navigation.reset({
+  //     index: 0,
+  //     routes: [
+  //       {
+  //         name: 'Drawer',
+  //         state: {
+  //           routes: [
+  //             {
+  //               name: 'Home',
+  //               params: {
+  //                 isOfflineMode: true,
+  //               },
+  //             },
+  //           ],
+  //         },
+  //       },
+  //     ],
+  //   });
+  // };
 
   return (
     <ImageBackground
@@ -80,13 +80,12 @@ const LoginScreen = ({ navigation }) => {
             onChangeText={(text) => setPassword(text)}
           />
         </View>
+        {/* Mostrar mensaje de error en rojo si las credenciales son incorrectas */}
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Iniciar Sesión</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.offlineButton} onPress={handleOfflineLogin}>
-          <Text style={styles.buttonText}>Iniciar sin Conexión</Text>
-        </TouchableOpacity>
+        {/* ... (resto del código) */}
       </View>
     </ImageBackground>
   );
@@ -108,8 +107,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#3498db',
   },
-  subtitle:{
-    fontSize:18,
+  subtitle: {
+    fontSize: 18,
   },
   inputContainer: {
     width: '100%',
@@ -133,16 +132,23 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 16,
   },
-  offlineButton: {
-    backgroundColor: '#e74c3c',
-    padding: 14,
-    borderRadius: 10,
-    width: '100%',
-    marginTop: 10,
-  },
+  // Eliminamos los estilos correspondientes al botón de inicio de sesión sin conexión
+  // offlineButton: {
+  //   backgroundColor: '#e74c3c',
+  //   padding: 14,
+  //   borderRadius: 10,
+  //   width: '100%',
+  //   marginTop: 10,
+  // },
   buttonText: {
     color: '#ffffff',
     fontSize: 16,
+    textAlign: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
     textAlign: 'center',
   },
 });

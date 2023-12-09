@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Button } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import NumericInput from '../assets/components/NumericInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import CheckBoxWithLabel from '../assets/components/CheckBoxWithLabel';
+import { API_BASE_URL } from '../config/config';
 
 export default function CrearFichas() {
-  const [titulo, setTitulo] = useState('Ficha001');
+  const [numeroFicha, setNumeroFicha] = useState();
+  const [titulo, setTitulo] = useState(`Ficha Nº${numeroFicha}`);
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
   const [sector, setSector] = useState('');
@@ -38,10 +39,17 @@ export default function CrearFichas() {
   const [domicilio, setDomicilio] = useState('');
   const [observaciones, setObservaciones] = useState('');
   const [funcionario, setFuncionario] = useState('');
-
+  const [isCheckedHombre, setIsCheckedHombre] = useState(false);
+  const [isCheckedMujer, setIsCheckedMujer] = useState(false);
+  const [isCheckedNino, setIsCheckedNino] = useState(false);
+  const [isCheckedAdulto, setIsCheckedAdulto] = useState(false);
+  const [isCheckedAdultoMayor, setIsCheckedAdultoMayor] = useState(false);
+  const [tipoDano, setTipoDano] = useState('');
+  const [sexo, setSexo] = useState(''); // Variable para almacenar el sexo
+  const [etapaVida, setEtapaVida] = useState(''); // Variable para almacenar la etapa de vida
 
   const resetState = () => {
-    setTitulo('Ficha001');
+    obtenerProximoIdFicha();
     setFecha('');
     setHora('');
     setSector('');
@@ -75,11 +83,31 @@ export default function CrearFichas() {
   };
 
   useEffect(() => {
+    obtenerProximoIdFicha();
     const currentFecha = moment().format('DD-MM-YYYY');
     const currentHora = moment().format('HH:mm');
     setFecha(currentFecha);
     setHora(currentHora);
   }, []);
+
+  const obtenerProximoIdFicha = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/obtenerDatos`);
+      if (response.ok) {
+        const data = await response.json();
+        const cantidadTotalFichas = data.cantidad_total_fichas;
+        
+        // Utilizar la forma de función para garantizar el valor más reciente
+        setNumeroFicha((prevNumeroFicha) => prevNumeroFicha + 1);
+        setTitulo(`Ficha Nº${cantidadTotalFichas + 1}`);
+      } else {
+        console.error('Error al obtener la cantidad total de fichas.');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
+  
 
   const handleTipoEventoPress = (option) => {
     const newTipoEvento = [...tipoEvento];
@@ -147,26 +175,71 @@ export default function CrearFichas() {
     setIsChecked7(true);
   };
 
+  const handleCheckboxHombre = () => {
+    setIsCheckedHombre(true);
+    setIsCheckedMujer(false);
+    setSexo('Hombre');
+  };
+  
+  const handleCheckboxMujer = () => {
+    setIsCheckedHombre(false);
+    setIsCheckedMujer(true);
+    setSexo('Mujer');
+  };
+  
+  const handleCheckboxNino = () => {
+    setIsCheckedNino(true);
+    setIsCheckedAdulto(false);
+    setIsCheckedAdultoMayor(false);
+    setEtapaVida('Niño');
+  };
+  
+  const handleCheckboxAdulto = () => {
+    setIsCheckedNino(false);
+    setIsCheckedAdulto(true);
+    setIsCheckedAdultoMayor(false);
+    setEtapaVida('Adulto');
+  };
+  
+  const handleCheckboxAdultoMayor = () => {
+    setIsCheckedNino(false);
+    setIsCheckedAdulto(false);
+    setIsCheckedAdultoMayor(true);
+    setEtapaVida('Adulto Mayor');
+  };
+
   const handleGuardar = async () => {
     const fechaActual = moment().format('YYYY-MM-DD');
     const horaActual = moment().format('HH:mm:ss');
+
+    if (
+      sector.trim() === '' ||
+      nombreAfectado.trim() === '' ||
+      rut.trim() === '' ||
+      fono.trim() === '' ||
+      domicilio.trim() === ''
+    ) {
+      alert('Por favor, complete todos los campos obligatorios (*).');
+      return;
+    }
       
     const data = {
       ficha_interna: {
-        id_fichaInterna: Math.floor(Math.random() * 1000) + 1, // Genera un ID aleatorio
-        numero_ficha: `FI${Math.floor(Math.random() * 1000) + 1}`, // Genera un número de ficha aleatorio
+        id_ficha:obtenerProximoIdFicha(),
         fecha: fechaActual,
         hora: horaActual,
       },
       emergencias: {
         id_emergencia: Math.floor(Math.random() * 1000) + 1, // Genera un ID de emergencia aleatorio
-        id_ficha_interna: Math.floor(Math.random() * 1000) + 1, // Genera un ID de ficha interna aleatorio
+        id_ficha:obtenerProximoIdFicha(),
         sector: sector,
         coordenadaLatitud: '', // Ajusta según lo que tengas disponible
         coordenadaLongitud: '', // Ajusta según lo que tengas disponible
         tipo: tipoEvento.join(','), // Convierte el array en una cadena separada por comas
         descripcion: detalleEmergencia,
-        danos_siniestro: 'MUCHO', // Ajusta según lo que tengas disponible
+        danos_siniestro: getDanosSiniestro(), // Ajusta según lo que tengas disponible
+        propiedad:getTipoPropiedad(),
+        evaluacion_emergencias: evaluacionNecesidades,
         damnificados: totalDeDanmificados,
         total_afectados: totalDeAfectados,
         total_femenino: totalDeNinosF + totalDeAdultosF + totalDeAdultoMayorF,
@@ -184,9 +257,9 @@ export default function CrearFichas() {
         id_emergencia: Math.floor(Math.random() * 1000) + 1, // Genera un ID de emergencia aleatorio
         domicilio: domicilio,
         telefono: fono,
-        sexo: 'Hombre', // Ajusta según lo que tengas disponible
-        etapavida: 'Edad Adulta', // Ajusta según lo que tengas disponible
-        tipodano: 'MUCHO', // Ajusta según lo que tengas disponible
+        sexo: sexo,
+        etapavida: etapaVida,
+        tipodano: tipoDano, // Ajusta según lo que tengas disponible
       },
     };
   
@@ -208,7 +281,29 @@ export default function CrearFichas() {
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }
-  };  
+  }; 
+  
+  const getDanosSiniestro = () => {
+    if (isChecked3) {
+      return 'Daño menor habitable';
+    } else if (isChecked4) {
+      return 'Daño mayor irrecuperable';
+    } else if (isChecked5) {
+      return 'Destruidas irrecuperables';
+    } else {
+      return '';
+    }
+  };
+
+  const getTipoPropiedad = () => {
+    if (isChecked6) {
+      return 'Propietario';
+    } else if (isChecked7) {
+      return 'Arrendada';
+    } else {
+      return ''; // or handle the case when no option is selected
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -231,7 +326,7 @@ export default function CrearFichas() {
   
         {/* Campo de sector */}
         <View>
-          <Text style={styles.subtitulo}>Sector</Text>
+          <Text style={styles.subtitulo}>Sector (*)</Text>
           <TextInput
             style={styles.largeInput}
             placeholder="Ingrese el sector"
@@ -243,7 +338,7 @@ export default function CrearFichas() {
         <View style={styles.separator}></View>
 
         {/* Campo de tipo de evento en dos columnas */}
-        <Text style={styles.subtitulo}>Tipo de evento</Text>
+        <Text style={styles.subtitulo}>Tipo de evento (*)</Text>
         <View style={styles.tipoEventoContainer}>
           <View style={styles.column}>{renderTipoEventoOptions(["Incendio Estructural", "Incendio Forestal", "Inundación", "Caida de Árbol", "Derrumbes", "Deslizamiento", "Sismo"])}</View>
           <View style={styles.column}>{renderTipoEventoOptions(["Emergencia Sanitaria", "Actividad Volcánica", "Accidente de Tránsito", "Derrame de Sustancias", "Emanación de Gas", "Corte de Energía Eléctrica", "Corte de Agua"])}</View>
@@ -397,7 +492,7 @@ export default function CrearFichas() {
           <CheckBoxWithLabel label="Destruidas irrecuperables" isChecked={isChecked5} onPress={handleCheckbox5} />
         </View>
 
-        <Text style={styles.label}>Propiedad:</Text>
+        <Text style={styles.label}>Propiedad (*):</Text>
 
         <View style={styles.checkboxContainer}>
           <CheckBoxWithLabel label="Propietario" isChecked={isChecked6} onPress={handleCheckbox6} />
@@ -407,11 +502,11 @@ export default function CrearFichas() {
           <CheckBoxWithLabel label="Arrendada" isChecked={isChecked7} onPress={handleCheckbox7} />
         </View>
 
-        <Text style={styles.label}>Seguridad:</Text>
+        <Text style={styles.label}>Seguro (*):</Text>
 
         <View style={styles.checkboxContainer}>
-          <CheckBoxWithLabel label="Es seguro" isChecked={isChecked1} onPress={handleCheckbox1} />
-          <CheckBoxWithLabel label="No es seguro" isChecked={isChecked2} onPress={handleCheckbox2} />
+          <CheckBoxWithLabel label="Tiene seguro" isChecked={isChecked1} onPress={handleCheckbox1} />
+          <CheckBoxWithLabel label="No tiene seguro" isChecked={isChecked2} onPress={handleCheckbox2} />
         </View>
 
         <View style={styles.separator}></View>
@@ -440,7 +535,7 @@ export default function CrearFichas() {
 
         <Text style={styles.subtitulo}>Identificacion de los afectados</Text>
         <View>
-          <Text style={styles.label}>Nombre Completo:</Text>
+          <Text style={styles.label}>Nombre Completo (*):</Text>
           <TextInput
             style={styles.largeInput}
             placeholder="Nombre del afectado"
@@ -449,7 +544,7 @@ export default function CrearFichas() {
           />
         </View>
         <View>
-          <Text style={styles.label}>RUT:</Text>
+          <Text style={styles.label}>RUT (*):</Text>
           <TextInput
             style={styles.largeInput}
             placeholder="ej: 12345678-9"
@@ -458,7 +553,7 @@ export default function CrearFichas() {
           />
         </View>
         <View>
-          <Text style={styles.label}>Fono:</Text>
+          <Text style={styles.label}>Fono (*):</Text>
           <TextInput
             style={styles.largeInput}
             placeholder="Ingrese el fono de la victima"
@@ -467,7 +562,7 @@ export default function CrearFichas() {
           />
         </View>
         <View>
-          <Text style={styles.label}>Domicilio:</Text>
+          <Text style={styles.label}>Domicilio (*):</Text>
           <TextInput
             style={styles.largeInput}
             placeholder="Domicilio del afectado" 
@@ -485,8 +580,30 @@ export default function CrearFichas() {
           numberOfLines={5}
         />
       </View>
+      <View style={styles.checkboxContainer}>
+      <Text style={styles.label}>Sexo:</Text>
+        <CheckBoxWithLabel label="Hombre" isChecked={isCheckedHombre} onPress={handleCheckboxHombre} />
+        <CheckBoxWithLabel label="Mujer" isChecked={isCheckedMujer} onPress={handleCheckboxMujer} />
+      </View>
+
+      <View style={styles.checkboxContainer}>
+      <Text style={styles.label}>Etapa de vida:</Text>
+        <CheckBoxWithLabel label="Niño" isChecked={isCheckedNino} onPress={handleCheckboxNino} />
+        <CheckBoxWithLabel label="Adulto" isChecked={isCheckedAdulto} onPress={handleCheckboxAdulto} />
+        <CheckBoxWithLabel label="Adulto Mayor" isChecked={isCheckedAdultoMayor} onPress={handleCheckboxAdultoMayor} />
+      </View>
+
       <View>
-          <Text style={styles.label}>Funcionario de turno:</Text>
+        <Text style={styles.label}>Tipo de Daño (*):</Text>
+        <TextInput
+          style={styles.largeInput}
+          placeholder="Ingrese el tipo de daño"
+          value={tipoDano}
+          onChangeText={(text) => setTipoDano(text)}
+        />
+      </View>
+      <View>
+          <Text style={styles.label}>Funcionario de turno (*):</Text>
           <TextInput
             style={styles.largeInput}
             placeholder="Nombre del funcionario"

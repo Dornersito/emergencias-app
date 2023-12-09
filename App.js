@@ -19,23 +19,20 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       initialRouteName="Login"
-      screenOptions={{
-        drawerActiveTintColor: '#e91e63',
-        drawerItemStyle: { marginVertical: 5 },
-        drawerLabelStyle: {
-          color: 'white',
-        },
-        drawerStyle: {
-          backgroundColor: '#42C2FF',
-        },
-      }}
     >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Crear ficha" component={CrearFichas} />
       <Drawer.Screen name="Registros" component={Registros} />
       <Drawer.Screen name="Análisis" component={Analisis} />
       <Drawer.Screen name="Exportar" component={Exportar} />
-      {/* No incluyas DetallesFicha en el Drawer */}
+      {/* Nueva pantalla para el inicio de sesión */}
+      <Drawer.Screen
+        name="Iniciar Sesión"
+        component={Login}
+        options={{
+          drawerLabel: 'Volver a Iniciar Sesión',
+        }}
+      />
     </Drawer.Navigator>
   );
 };
@@ -52,7 +49,6 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Drawer" component={DrawerNavigator} />
-        {/* Agrega la pantalla DetallesFicha y pasa el prop route para recibir los parámetros */}
         <Stack.Screen
           name="DetallesFicha"
           component={DetallesFicha}

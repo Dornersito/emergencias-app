@@ -47,7 +47,7 @@ const DetallesFicha = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>{`Ficha: ${ficha.numero_ficha || 'N/A'}`}</Text>
+      <Text style={styles.title}>{`Ficha Nº ${ficha.id_ficha || 'N/A'}`}</Text>
 
       <View style={styles.header}>
         <View style={styles.dateTimeBox}>

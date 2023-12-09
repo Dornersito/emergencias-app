@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { API_BASE_URL } from '../config/config';
 
 export default function Registros() {
   const [fichas, setFichas] = useState([]);
@@ -21,18 +22,19 @@ export default function Registros() {
 
   const obtenerFichas = async () => {
     try {
-      const response = await fetch('http://192.168.0.2:5000/api/obtenerDatos');
-      const data = await response.json();
-
-      console.log('Datos recibidos de la API:', data);
-
-      setFichas(data);
+      const response = await fetch(`${API_BASE_URL}/api/obtenerDatos`);
+      const { datos } = await response.json(); // Extraer solo la propiedad 'datos' del objeto de respuesta
+  
+      console.log('Datos recibidos de la API:', datos);
+  
+      setFichas(datos); // Asignar solo la matriz de datos a tu estado 'fichas'
     } catch (error) {
       console.error('Error al obtener las fichas:', error);
     } finally {
       setIsRefreshing(false);
     }
   };
+  
 
   const handleFilterPress = () => {
     console.log('Filtros aplicados');
@@ -54,10 +56,10 @@ export default function Registros() {
     return (
       <TouchableOpacity onPress={() => handleFichaPress(item)}>
         <View style={styles.fichaItem}>
-          <Text>{`${item.numero_ficha || 'N/A'}`}</Text>
+          <Text>Ficha Nº {`${item.id_ficha || 'N/A'}`}</Text>
+          <Text>Emergencia ID {`${item.id_emergencia || 'N/A'}`}</Text>
           <Text>{`Nombre Completo: ${item.nombre_completo || 'N/A'}`}</Text>
           <Text>{`Calle: ${item.domicilio || 'N/A'}`}</Text>
-          {/* Otros campos de la ficha y afectados según sea necesario */}
         </View>
       </TouchableOpacity>
     );
