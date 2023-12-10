@@ -8,7 +8,7 @@ import { API_BASE_URL } from '../config/config';
 
 export default function CrearFichas() {
   const [numeroFicha, setNumeroFicha] = useState();
-  const [titulo, setTitulo] = useState(`Ficha Nº${numeroFicha}`);
+  const [titulo, setTitulo] = useState(`Ficha`);
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
   const [sector, setSector] = useState('');
@@ -49,7 +49,7 @@ export default function CrearFichas() {
   const [etapaVida, setEtapaVida] = useState(''); // Variable para almacenar la etapa de vida
 
   const resetState = () => {
-    obtenerProximoIdFicha();
+    setTitulo('Ficha')
     setFecha('');
     setHora('');
     setSector('');
@@ -83,7 +83,6 @@ export default function CrearFichas() {
   };
 
   useEffect(() => {
-    obtenerProximoIdFicha();
     const currentFecha = moment().format('DD-MM-YYYY');
     const currentHora = moment().format('HH:mm');
     setFecha(currentFecha);
@@ -99,7 +98,6 @@ export default function CrearFichas() {
         
         // Utilizar la forma de función para garantizar el valor más reciente
         setNumeroFicha((prevNumeroFicha) => prevNumeroFicha + 1);
-        setTitulo(`Ficha Nº${cantidadTotalFichas + 1}`);
       } else {
         console.error('Error al obtener la cantidad total de fichas.');
       }
@@ -225,13 +223,13 @@ export default function CrearFichas() {
       
     const data = {
       ficha_interna: {
-        id_ficha:obtenerProximoIdFicha(),
+        id_ficha:Math.floor(Math.random() * 1000) + 1,
         fecha: fechaActual,
         hora: horaActual,
       },
       emergencias: {
         id_emergencia: Math.floor(Math.random() * 1000) + 1, // Genera un ID de emergencia aleatorio
-        id_ficha:obtenerProximoIdFicha(),
+        id_ficha:Math.floor(Math.random() * 1000) + 1,
         sector: sector,
         coordenadaLatitud: '', // Ajusta según lo que tengas disponible
         coordenadaLongitud: '', // Ajusta según lo que tengas disponible

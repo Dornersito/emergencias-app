@@ -27,8 +27,9 @@ export default function Registros() {
   
       console.log('Datos recibidos de la API:', datos);
   
-      setFichas(datos); // Asignar solo la matriz de datos a tu estado 'fichas'
+      setFichas(datos);
     } catch (error) {
+      alert('No esta conectado a la base de datos');
       console.error('Error al obtener las fichas:', error);
     } finally {
       setIsRefreshing(false);

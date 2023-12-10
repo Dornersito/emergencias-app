@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function CrearFichas() {
   return (
     <View style={styles.container}>
-      <Text>AKI HAY QUE EXPORTAR FICHAS</Text>
+      <Text>MANTENIMIENTO</Text>
       <StatusBar style="auto" />
     </View>
   );

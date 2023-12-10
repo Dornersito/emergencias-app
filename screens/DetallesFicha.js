@@ -120,13 +120,6 @@ const DetallesFicha = ({ route }) => {
           <Text style={styles.personalDetailsText}>{`Domicilio: ${ficha.domicilio || 'N/A'}`}</Text>
         </View>
       </View>
-
-      <View style={styles.exportButtonContainer}>
-        <TouchableOpacity onPress={handleExportToPDF} style={styles.exportButton}>
-          <Text style={styles.exportButtonText}>Exportar a PDF</Text>
-        </TouchableOpacity>
-      </View>
-
     </ScrollView>
   );
 };
