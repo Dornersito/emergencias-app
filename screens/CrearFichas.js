@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Button } from 'react-native';
+import {Alert, View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Button } from 'react-native';
 import NumericInput from '../assets/components/NumericInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import CheckBoxWithLabel from '../assets/components/CheckBoxWithLabel';
-import { API_BASE_URL } from '../config/config';
+import { API_BASE_URL } from '../config/config.js';
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function CrearFichas() {
   const [numeroFicha, setNumeroFicha] = useState();
@@ -47,6 +49,8 @@ export default function CrearFichas() {
   const [tipoDano, setTipoDano] = useState('');
   const [sexo, setSexo] = useState(''); // Variable para almacenar el sexo
   const [etapaVida, setEtapaVida] = useState(''); // Variable para almacenar la etapa de vida
+  const navigation = useNavigation();
+
 
   const resetState = () => {
     setTitulo('Ficha')
@@ -210,16 +214,16 @@ export default function CrearFichas() {
     const fechaActual = moment().format('YYYY-MM-DD');
     const horaActual = moment().format('HH:mm:ss');
 
-    if (
-      sector.trim() === '' ||
-      nombreAfectado.trim() === '' ||
-      rut.trim() === '' ||
-      fono.trim() === '' ||
-      domicilio.trim() === ''
-    ) {
-      alert('Por favor, complete todos los campos obligatorios (*).');
-      return;
-    }
+    // if (
+    //   sector.trim() === '' ||
+    //   nombreAfectado.trim() === '' ||
+    //   rut.trim() === '' ||
+    //   fono.trim() === '' ||
+    //   domicilio.trim() === ''
+    // ) {
+    //   Alert.alert('Por favor, complete todos los campos obligatorios (*).');
+    //   return;
+    // }
       
     const data = {
       ficha_interna: {
@@ -262,7 +266,7 @@ export default function CrearFichas() {
     };
   
     try {
-      const response = await fetch('http://192.168.0.2:5000/api/insertarDatos/fichas', {
+      const response = await fetch(`${API_BASE_URL}/api/insertarDatos/fichas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +277,12 @@ export default function CrearFichas() {
       if (response.ok) {
         console.log('Información guardada exitosamente.');
         resetState(); // Restablece los estados después de guardar
+        Alert.alert('Ficha guardada!');
+        navigation.navigate('Home', { screen: 'Home' });
+        
+
       } else {
+        console.log(response);
         console.error('Error al intentar guardar la información.');
       }
     } catch (error) {
@@ -434,7 +443,7 @@ export default function CrearFichas() {
         </View>
         <View style={styles.separator2}></View>
         <View style={styles.rowContainer2}>
-          <Text style={styles.label}>Danmificados:</Text>
+          <Text style={styles.label}>Damnificados:</Text>
           <NumericInput
             value={totalDeDanmificados}
             onIncrement={() => setTotalDeDanmificados((prev) => parseInt(prev, 10) + 1)}
@@ -585,7 +594,7 @@ export default function CrearFichas() {
       </View>
 
       <View style={styles.checkboxContainer}>
-      <Text style={styles.label}>Etapa de vida:</Text>
+      <Text style={styles.label}>Etapa de vida: </Text>
         <CheckBoxWithLabel label="Niño" isChecked={isCheckedNino} onPress={handleCheckboxNino} />
         <CheckBoxWithLabel label="Adulto" isChecked={isCheckedAdulto} onPress={handleCheckboxAdulto} />
         <CheckBoxWithLabel label="Adulto Mayor" isChecked={isCheckedAdultoMayor} onPress={handleCheckboxAdultoMayor} />

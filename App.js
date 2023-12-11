@@ -17,20 +17,79 @@ const Stack = createStackNavigator();
 
 const DrawerNavigator = () => {
   return (
-    <Drawer.Navigator
+    <Drawer.Navigator 
       initialRouteName="Login"
+      screenOptions={{
+        drawerActiveTintColor: '#e91e63',
+        drawerItemStyle: { marginVertical: 5 },
+        drawerLabelStyle: {
+          color: 'white'
+        },
+        drawerStyle: {
+          backgroundColor: '#42C2FF',
+        },
+      }}
     >
-      <Drawer.Screen name="Home" component={Home} />
-      <Drawer.Screen name="Crear ficha" component={CrearFichas} />
-      <Drawer.Screen name="Registros" component={Registros} />
-      <Drawer.Screen name="Análisis" component={Analisis} />
-      <Drawer.Screen name="Exportar" component={Exportar} />
+      <Drawer.Screen name= "Home" component={Home}
+        options={{
+          headerStyle: {
+            backgroundColor: '#42C2FF',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'normal',
+          },
+        }}/>
+      <Drawer.Screen name="Crear ficha" component={CrearFichas}
+        options={{
+          headerStyle: {
+            backgroundColor: '#42C2FF',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'normal',
+          },
+        }}/>
+
+      <Drawer.Screen name="Registros" component={Registros}
+        options={{
+          headerStyle: {
+            backgroundColor: '#42C2FF',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'normal',
+          },
+        }}/>
+
+      <Drawer.Screen name="Análisis" component={Analisis} 
+        options={{
+          headerStyle: {
+            backgroundColor: '#42C2FF',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'normal',
+          },
+        }}/>
+
+      <Drawer.Screen name="Exportar" component={Exportar}
+        options={{
+          headerStyle: {
+            backgroundColor: '#42C2FF',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'normal',
+          },
+        }} />
       {/* Nueva pantalla para el inicio de sesión */}
       <Drawer.Screen
         name="Iniciar Sesión"
         component={Login}
         options={{
           drawerLabel: 'Volver a Iniciar Sesión',
+          headerShown: false,
         }}
       />
     </Drawer.Navigator>

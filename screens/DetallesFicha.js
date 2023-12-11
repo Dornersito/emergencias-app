@@ -62,7 +62,7 @@ const DetallesFicha = ({ route }) => {
       </View>
 
       <View style={styles.imageBox}>
-        <Text style={styles.label}>Imagenes:</Text>
+        <Text style={styles.label}>Imágenes:</Text>
         {ficha.imagenes &&
           ficha.imagenes.map((imagen, index) => (
             <Image key={index} source={{ uri: imagen }} style={styles.image} />
@@ -72,7 +72,7 @@ const DetallesFicha = ({ route }) => {
       <View style={styles.locationBox}>
         <Icon name="map-marker" size={30} color="#555" />
         <View style={styles.locationDetailsContainer}>
-          <Text style={styles.locationDetailsLabel}>Ubicacion Emergencia</Text>
+          <Text style={styles.locationDetailsLabel}>Ubicación Emergencia</Text>
           <Text style={styles.locationDetailsText}>{`Latitud: ${ficha.coordenadaLatitud || 'N/A'}`}</Text>
           <Text style={styles.locationDetailsText}>{`Longitud: ${ficha.coordenadaLongitud || 'N/A'}`}</Text>
         </View>
