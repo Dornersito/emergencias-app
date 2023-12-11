@@ -214,16 +214,16 @@ export default function CrearFichas() {
     const fechaActual = moment().format('YYYY-MM-DD');
     const horaActual = moment().format('HH:mm:ss');
 
-    // if (
-    //   sector.trim() === '' ||
-    //   nombreAfectado.trim() === '' ||
-    //   rut.trim() === '' ||
-    //   fono.trim() === '' ||
-    //   domicilio.trim() === ''
-    // ) {
-    //   Alert.alert('Por favor, complete todos los campos obligatorios (*).');
-    //   return;
-    // }
+    if (
+      sector.trim() === '' ||
+      nombreAfectado.trim() === '' ||
+      rut.trim() === '' ||
+      fono.trim() === '' ||
+      domicilio.trim() === ''
+    ) {
+      Alert.alert('Por favor, complete todos los campos obligatorios (*).');
+      return;
+    }
       
     const data = {
       ficha_interna: {

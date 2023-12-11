@@ -1,2 +1,2 @@
 // config.js
-export const API_BASE_URL = 'TU IP';
+export const API_BASE_URL = 'http://192.168.0.15:5000';
