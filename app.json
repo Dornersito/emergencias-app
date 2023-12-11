@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -32,8 +30,18 @@
     },
     "extra": {
       "eas": {
-        "projectId": "e2492950-45f3-42d9-ab38-3d8082d04132"
+        "projectId": "db4a0fb3-8c9e-4bf6-853c-af7e6f5d0814"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ]
   }
 }
